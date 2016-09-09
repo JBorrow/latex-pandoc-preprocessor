@@ -1,3 +1,18 @@
+"""
+Holds the PreProcess class. This class contains functions that populate the
+
+    PreProcess.ParsedData
+
+dictionary - this contains the objects defined in types.py and parses the data.
+
+It takes in the initial .tex string, replaces with uids and leaves you with
+the above array and PreeProcess.ParsedText which should be written to a
+temporary file and ran through pandoc to markdown.
+
+Author: Josh Borrow
+Date Created: 2016-09-09.
+"""
+
 import random
 import re
 import copy
@@ -72,7 +87,6 @@ class PreProcess(object):
 
         for UID, Instance in self.ParsedData.iteritems():
             self.ParsedText = self.ParsedText.replace(UID, Instance.OriginalContent)
-
 
 
 
