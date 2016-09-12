@@ -33,20 +33,25 @@ class PreProcess(object):
         self.InputText = InputText
         self.ParsedText = copy.deepcopy(self.InputText)
         self.ParsedRef = {}
+        self.ParsedCite = {}
         self.ParsedMath = {}
         self.ParsedFig = {}
         
+        self.RefExtract()
+        self.ReplaceAll(self.ParsedRef)
+
+        self.CiteExtract()
+        self.ReplaceAll(self.ParsedCite)
+
         self.MathExtract()
         self.ReplaceAll(self.ParsedMath)
 
         self.FigExtract()
         self.ReplaceAll(self.ParsedFig)
-        
-        self.RefExtract()
-        self.ReplaceAll(self.ParsedRef)
 
         self.ParsedData = {
                 'ref': self.ParsedRef,
+                'cite': self.ParsedCite,
                 'math': self.ParsedMath,
                 'fig': self.ParsedFig,
         }
@@ -72,6 +77,19 @@ class PreProcess(object):
         for Reference in RefExtracted:
             ThisUID = self.GenerateUID()
             self.ParsedRef[ThisUID] = Ref(Reference, ThisUID)
+
+    
+    def CiteExtract(self):
+        r""" Finds all cites in the text. This is a passthrough. """
+        
+        Regex = r"\\cite\{.*?\}"
+        self.CiteRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
+
+        CiteExtracted = self.CiteRegex.findall(self.InputText)
+
+        for Citation in CiteExtracted:
+            ThisUID = self.GenerateUID()
+            self.ParsedCite[ThisUID] = Cite(Citation, ThisUID)
 
 
     def MathExtract(self):
@@ -118,6 +136,7 @@ class PostProcess(object):
 
         self.ReplaceAll(ParsedData['fig'])
         self.ReplaceAll(ParsedData['math'])
+        self.ReplaceAll(ParsedData['cite'])
         self.ReplaceAll(ParsedData['ref'])
     
     def ReplaceAll(self, toParse):

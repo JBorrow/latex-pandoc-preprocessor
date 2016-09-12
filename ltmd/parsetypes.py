@@ -116,6 +116,13 @@ class Ref(LatexObject):
             self.OutputContent = "[@ERROR]"
 
 
+class Cite(LatexObject):
+    def __init__(self, OriginalContent, UID):
+        self.OriginalContent = OriginalContent
+        self.UID = UID
+        self.OutputContent = OriginalContent  # passthrough for citeproc
+
+
 class Figure(LatexObject):
     def __init__(self, OriginalContent, UID):
         self.OriginalContent = OriginalContent
