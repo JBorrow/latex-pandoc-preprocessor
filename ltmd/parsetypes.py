@@ -53,7 +53,7 @@ class Math(LatexObject):
         
         Assumes that self.LabelMatch is already set."""
 
-        LabelString = "\\label\{{}\}".format(self.LabelText)
+        LabelString = "\\label{{{}}}".format(self.LabelText)
 
         self.Math = self.OriginalContent.replace(LabelString, "")
 
@@ -66,9 +66,12 @@ class Math(LatexObject):
             $$
                 <MATH>
             $$ {#label}."""
-
-        self.OutputContent =  "$$\n\t {} \n$$ \{#{}\}".format(self.Math,
+        
+        try:
+            self.OutputContent =  "$$\n\t {} \n$$ {{#{}}}".format(self.Math,
                                                               self.LabelText)
+        except AttributeError:  # no Label
+            self.OutputContent = "$$\n\t {} \n$$".format(self.Math)
 
 
 
@@ -91,16 +94,22 @@ class Ref(LatexObject):
         Regex = r"\\ref\{(.*?)\}"
         RefRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
         
-        self.RefMatch = RefRegex.search(self.OriginalContent)
-        self.RefText = self.RefMatch.group()
+        try:
+            self.RefMatch = RefRegex.search(self.OriginalContent)
+            self.RefText = self.RefMatch.group()
+        except AttributeError:  # no match
+            pass
 
 
     def ConvertRef(self):
         r""" Converts the reference info the pandoc-crossref style:
 
             [@<REF>]."""
-
-        self.OutputContent = "[@{}]".format(self.RefText)
+        
+        try:
+            self.OutputContent = "[@{}]".format(self.RefText)
+        except AttributeError:  # no match
+            self.OutputContent = "[@ERROR]"
 
 
 class Figure(LatexObject):
@@ -108,6 +117,7 @@ class Figure(LatexObject):
         self.OriginalContent = OriginalContent
         self.UID = UID
         self.GetUrls()
+        self.GetLabel()
         self.GetCaption()
         self.ConvertFigure()
 
@@ -154,7 +164,7 @@ class Figure(LatexObject):
 
             ![<CAPTION>](<URL>){#<LABEL>}."""
 
-        self.OutputContent = "![{}]({})\{#{}\}".format(
+        self.OutputContent = "![{}]({}){{#{}}}".format(
                                                 self.CaptionText,
                                                 self.UrlText,
                                                 self.LabelText)

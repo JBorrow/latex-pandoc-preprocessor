@@ -24,6 +24,7 @@ Date Created: 2016-09-09.
 import random
 import re
 import copy
+import string
 from parsetypes import *
 
 
@@ -47,7 +48,7 @@ class PreProcess(object):
         if UID in self.ParsedData.keys():
             UID = random.randint(0, 1e10)
         
-        return UID
+        return unicode("{:0>10}".format(UID), 'utf-8')
 
 
     def RefExtract(self):
@@ -95,10 +96,13 @@ class PreProcess(object):
         """ Replaces all of the OriginalContent from the objects in ParsedData
         with their respective Unique Identifiers. """
 
-        self.ParsedText = copy.deepcopy(self.InputText)
+        PT = copy.deepcopy(self.InputText)
 
         for UID, Instance in self.ParsedData.iteritems():
-            self.ParsedText = self.ParsedText.replace(UID, Instance.OriginalContent)
+            print(UID, Instance.OriginalContent)
+            PT = PT.replace(Instance.OriginalContent, UID)
+
+        self.ParsedText = PT
 
 
 

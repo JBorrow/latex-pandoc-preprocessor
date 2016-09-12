@@ -13,7 +13,7 @@ def GetTex(filename):
     """ Get the content of the tex file """
 
     with open(filename, 'r') as file:
-       return file.read()
+       return unicode(file.read(), "utf-8")
 
 
 def OutputMD(filename, content):
@@ -30,7 +30,7 @@ def RunPandoc(content, extra=""):
     TempFileTeX = tempfile.NamedTemporaryFile()
     TempFileMD = tempfile.NamedTemporaryFile()
 
-    TempFileTex.write(content)
+    TempFileTeX.write(content)
 
     os.system("pandoc -f latex -t markdown {} -o {} {}".format(
                                                             TempFileTeX.name,
