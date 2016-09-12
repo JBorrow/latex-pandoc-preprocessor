@@ -40,8 +40,8 @@ class PreProcess(object):
         self.RefExtract()
         self.ReplaceAll(self.ParsedRef)
 
-        #self.CiteExtract()
-        #self.ReplaceAll(self.ParsedCite)
+        self.CiteExtract()
+        self.ReplaceAll(self.ParsedCite)
 
         self.MathExtract()
         self.ReplaceAll(self.ParsedMath)
@@ -72,7 +72,7 @@ class PreProcess(object):
         Regex = r"\\ref\{.*?\}"
         self.RefRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
-        RefExtracted = self.RefRegex.findall(self.InputText)
+        RefExtracted = self.RefRegex.findall(self.ParsedText)
 
         for Reference in RefExtracted:
             ThisUID = self.GenerateUID()
@@ -85,7 +85,7 @@ class PreProcess(object):
         Regex = r"\\cite\{.*?\}"
         self.CiteRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
-        CiteExtracted = self.CiteRegex.findall(self.InputText)
+        CiteExtracted = self.CiteRegex.findall(self.ParsedText)
 
         for Citation in CiteExtracted:
             ThisUID = self.GenerateUID()
@@ -99,7 +99,7 @@ class PreProcess(object):
         Regex = r"\\begin\{equation\}.*?\\end\{equation\}"
         self.MathRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
-        MathExtracted = self.MathRegex.findall(self.InputText)
+        MathExtracted = self.MathRegex.findall(self.ParsedText)
 
         for Mathematics in MathExtracted:
             ThisUID = self.GenerateUID()
@@ -113,7 +113,7 @@ class PreProcess(object):
         Regex = r"\\begin\{figure\}.*?\\end\{figure\}"
         self.FigRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
-        FigExtracted = self.FigRegex.findall(self.InputText)
+        FigExtracted = self.FigRegex.findall(self.ParsedText)
 
         for FigureText in FigExtracted:
             ThisUID = self.GenerateUID()
