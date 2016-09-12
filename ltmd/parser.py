@@ -107,7 +107,6 @@ class PreProcess(object):
         with their respective Unique Identifiers. """
 
         for UID, Instance in toParse.items():
-            print(UID, Instance.OriginalContent)
             self.ParsedText = self.ParsedText.replace(Instance.OriginalContent, UID)
 
 
