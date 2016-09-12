@@ -31,12 +31,25 @@ from parsetypes import *
 class PreProcess(object):
     def __init__(self, InputText):
         self.InputText = InputText
-        self.ParsedData = {}
+        self.ParsedText = copy.deepcopy(self.InputText)
+        self.ParsedRef = {}
+        self.ParsedMath = {}
+        self.ParsedFig = {}
         
         self.RefExtract()
+        self.ReplaceAll(self.ParsedRef)
+        
         self.MathExtract()
+        self.ReplaceAll(self.ParsedMath)
+
         self.FigExtract()
-        self.ReplaceAll()
+        self.ReplaceAll(self.ParsedFig)
+
+        self.ParsedData = {
+                'ref': self.ParsedRef,
+                'math': self.ParsedMath,
+                'fig': self.ParsedFig,
+        }
 
 
     def GenerateUID(self):
@@ -45,9 +58,6 @@ class PreProcess(object):
 
         UID = random.randint(0, 1e10)
 
-        if UID in self.ParsedData.keys():
-            UID = random.randint(0, 1e10)
-        
         return unicode("{:0>10}".format(UID), 'utf-8')
 
 
@@ -61,7 +71,7 @@ class PreProcess(object):
 
         for Reference in RefExtracted:
             ThisUID = self.GenerateUID()
-            self.ParsedData[ThisUID] = Ref(Reference, ThisUID)
+            self.ParsedRef[ThisUID] = Ref(Reference, ThisUID)
 
 
     def MathExtract(self):
@@ -75,7 +85,7 @@ class PreProcess(object):
 
         for Mathematics in MathExtracted:
             ThisUID = self.GenerateUID()
-            self.ParsedData[ThisUID] = Math(Mathematics, ThisUID)
+            self.ParsedMath[ThisUID] = Math(Mathematics, ThisUID)
 
 
     def FigExtract(self):
@@ -89,37 +99,32 @@ class PreProcess(object):
 
         for FigureText in FigExtracted:
             ThisUID = self.GenerateUID()
-            self.ParsedData[ThisUID] = Figure(FigureText, ThisUID)
+            self.ParsedFig[ThisUID] = Figure(FigureText, ThisUID)
 
 
-    def ReplaceAll(self):
+    def ReplaceAll(self, toParse):
         """ Replaces all of the OriginalContent from the objects in ParsedData
         with their respective Unique Identifiers. """
 
-        PT = copy.deepcopy(self.InputText)
-
-        for UID, Instance in self.ParsedData.iteritems():
+        for UID, Instance in toParse.iteritems():
             print(UID, Instance.OriginalContent)
-            PT = PT.replace(Instance.OriginalContent, UID)
-
-        self.ParsedText = PT
+            self.ParsedText = self.ParsedText.replace(Instance.OriginalContent, UID)
 
 
 
 class PostProcess(object):
     def __init__(self, InputText, ParsedData):
         self.InputText = InputText
-        self.ParsedData = ParsedData
+        self.ParsedText = copy.deepcopy(self.InputText)
 
-        self.ReplaceAll()
-
+        self.ReplaceAll(ParsedData['fig'])
+        self.ReplaceAll(ParsedData['math'])
+        self.ReplaceAll(ParsedData['ref'])
     
-    def ReplaceAll(self):
+    def ReplaceAll(self, toParse):
         """ Replaces all of the Unique Identifiers from ParsedData with their
         markdown-ified expressions from ParsedData. """
        
-        self.ParsedText = copy.deepcopy(self.InputText)
-
-        for UID, Instance in self.ParsedData.iteritems():
+        for UID, Instance in toParse.iteritems():
             self.ParsedText = self.ParsedText.replace(UID, Instance.OutputContent)
 
