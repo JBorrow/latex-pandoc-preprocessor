@@ -203,8 +203,8 @@ class Figure(LatexObject):
             self.OutputContent = "\n\n<div id=\"{}\">\n\n".format(self.LabelText)
             for index, img in enumerate(self.UrlText):
                 cap = '#{}{}'.format(self.LabelText, index)
-                self.OutputContent = self.OutputContent + "![]({}){{{}}}\n\n".format(img, cap)
+                self.OutputContent = self.OutputContent + "![]({}){{{}}}\n".format(img, cap)
             
-            self.OutputContent = self.OutputContent + "{}".format(self.CaptionText)
+            self.OutputContent = self.OutputContent + "\n{}".format(self.CaptionText)
             self.OutputContent = self.OutputContent + "\n\n</div>\n\n"
 
