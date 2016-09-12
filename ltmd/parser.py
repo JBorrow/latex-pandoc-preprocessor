@@ -36,14 +36,14 @@ class PreProcess(object):
         self.ParsedMath = {}
         self.ParsedFig = {}
         
-        self.RefExtract()
-        self.ReplaceAll(self.ParsedRef)
-        
         self.MathExtract()
         self.ReplaceAll(self.ParsedMath)
 
         self.FigExtract()
         self.ReplaceAll(self.ParsedFig)
+        
+        self.RefExtract()
+        self.ReplaceAll(self.ParsedRef)
 
         self.ParsedData = {
                 'ref': self.ParsedRef,
@@ -58,13 +58,13 @@ class PreProcess(object):
 
         UID = random.randint(0, 1e10)
 
-        return unicode("{:0>10}".format(UID), 'utf-8')
+        return "{:0>10}".format(UID)
 
 
     def RefExtract(self):
         r""" Finds all references in the text, generates UIDs and places
         the text in a Ref instance. """
-        Regex = r"\\ref\{(.*?)\}"
+        Regex = r"\\ref\{.*?\}"
         self.RefRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
         RefExtracted = self.RefRegex.findall(self.InputText)
@@ -78,7 +78,7 @@ class PreProcess(object):
         r""" Finds all equations in the text, generates UIDs and places
         the text in a Math instance. """
 
-        Regex = r"\\begin\{equation\}(.*?)\\end\{equation\}"
+        Regex = r"\\begin\{equation\}.*?\\end\{equation\}"
         self.MathRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
         MathExtracted = self.MathRegex.findall(self.InputText)
@@ -92,7 +92,7 @@ class PreProcess(object):
         r""" Finds all figures in the text, generates UIDs and places
         the text in a Fig instance. """
 
-        Regex = r"\\begin\{figure\}(.*?)\\end\{figure\}"
+        Regex = r"\\begin\{figure\}.*?\\end\{figure\}"
         self.FigRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
         FigExtracted = self.FigRegex.findall(self.InputText)
@@ -106,7 +106,7 @@ class PreProcess(object):
         """ Replaces all of the OriginalContent from the objects in ParsedData
         with their respective Unique Identifiers. """
 
-        for UID, Instance in toParse.iteritems():
+        for UID, Instance in toParse.items():
             print(UID, Instance.OriginalContent)
             self.ParsedText = self.ParsedText.replace(Instance.OriginalContent, UID)
 
@@ -125,6 +125,6 @@ class PostProcess(object):
         """ Replaces all of the Unique Identifiers from ParsedData with their
         markdown-ified expressions from ParsedData. """
        
-        for UID, Instance in toParse.iteritems():
+        for UID, Instance in toParse.items():
             self.ParsedText = self.ParsedText.replace(UID, Instance.OutputContent)
 

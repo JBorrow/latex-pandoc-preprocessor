@@ -7,13 +7,14 @@ Date Created: 2016-09-09
 
 import os
 import tempfile
+import subprocess
 
 
 def GetTex(filename):
     """ Get the content of the tex file """
 
     with open(filename, 'r') as file:
-       return unicode(file.read(), "utf-8")
+       return file.read()
 
 
 def OutputMD(filename, content):
@@ -27,15 +28,13 @@ def RunPandoc(content, extra=""):
     """ Creates a temporary file, runs pandoc TeX->MD on it (with content)
     and then reopens and returns the string. """
 
-    TempFileTeX = tempfile.NamedTemporaryFile()
-    TempFileMD = tempfile.NamedTemporaryFile()
+    TempFileTeX = tempfile.NamedTemporaryFile(mode='w+t', encoding='utf-8')
+    TempFileMD = tempfile.NamedTemporaryFile(mode='w+t', encoding='utf-8')
 
     TempFileTeX.write(content)
+    print(TempFileTeX.read())
 
-    os.system("pandoc -f latex -t markdown {} -o {} {}".format(
-                                                            TempFileTeX.name,
-                                                            TempFileMD.name,
-                                                            extra))
+    subprocess.call(['pandoc', '-f', 'latex', '-t', 'markdown', TempFileTeX.name, '-o', TempFileMD.name])
 
     OutputData = TempFileMD.read()
 

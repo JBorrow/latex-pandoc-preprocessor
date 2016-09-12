@@ -9,7 +9,6 @@ Date Created: 2016-09-09.
 
 import re
 
-
 class LatexObject(object):
     def __init__(self, OriginalContent, UID):
         self.OriginalContent = OriginalContent
