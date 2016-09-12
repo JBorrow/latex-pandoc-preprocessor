@@ -200,10 +200,11 @@ class Figure(LatexObject):
                                                 self.UrlText[0],
                                                 self.LabelText)
         else:
-            self.OutputContent = "\n\n<div id='{}'>\n".format(self.LabelText)
-            for img in self.UrlText:
-                self.OutputContent = self.OutputContent + "![]({}){{}}\n".format(img)
+            self.OutputContent = "\n\n<div id=\"{}\">\n\n".format(self.LabelText)
+            for index, img in enumerate(self.UrlText):
+                cap = '#{}{}'.format(self.LabelText, index)
+                self.OutputContent = self.OutputContent + "![]({}){{{}}}\n\n".format(img, cap)
             
-            self.OutputContent = self.OutputContent + "\n\n{}".format(self.CaptionText)
-            self.OutputContent = self.OutputContent + "</div>\n\n"
+            self.OutputContent = self.OutputContent + "{}".format(self.CaptionText)
+            self.OutputContent = self.OutputContent + "\n\n</div>\n\n"
 
