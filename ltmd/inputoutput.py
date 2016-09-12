@@ -12,7 +12,8 @@ import subprocess
 
 def GetTex(filename):
     """ Get the content of the tex file """
-
+    
+    print("Reading {}...".format(filename))
     with open(filename, 'r') as file:
        return file.read()
 
@@ -20,6 +21,7 @@ def GetTex(filename):
 def OutputMD(filename, content):
     """ Output the final markdown to file """
 
+    print("Writing {}...".format(filename))
     with open(filename, 'w') as file:
         file.write(content)
 
@@ -31,10 +33,14 @@ def RunPandoc(content, extra=""):
     TempFileTeX = tempfile.NamedTemporaryFile(mode='w+t', encoding='utf-8')
     TempFileMD = tempfile.NamedTemporaryFile(mode='w+t', encoding='utf-8')
 
+    print("Writing temporary LaTeX file")
+    print(content)
     TempFileTeX.write(content)
 
+    print("Running Pandoc")
     subprocess.call(['pandoc', '-f', 'latex', '-t', 'markdown', TempFileTeX.name, '-o', TempFileMD.name])
 
+    print("Reading temporary output file")
     OutputData = TempFileMD.read()
 
     TempFileTeX.close()

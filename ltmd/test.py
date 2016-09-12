@@ -1,10 +1,9 @@
 import inputoutput as io
 from parser import * 
 
-input = io.GetTex('test.tex')
+input = io.GetTex('Nuclear.tex')
 
 PreProcessed = PreProcess(input)
-print(PreProcessed.ParsedText)
 pandocced = io.RunPandoc(PreProcessed.ParsedText)
 PostProcessed = PostProcess(pandocced, PreProcessed.ParsedData)
 

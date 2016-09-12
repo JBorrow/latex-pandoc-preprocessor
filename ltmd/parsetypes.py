@@ -120,7 +120,27 @@ class Cite(LatexObject):
     def __init__(self, OriginalContent, UID):
         self.OriginalContent = OriginalContent
         self.UID = UID
-        self.OutputContent = OriginalContent  # passthrough for citeproc
+
+        self.GetCite()
+        self.ConvertCite()
+    
+
+    def GetCite(self):
+        Regex = r"\\cite\{(.*?)\}"
+        CiteRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
+
+        try:
+            self.CiteMatch = CiteRegex.search(self.OriginalContent)
+            self.CiteText = self.CiteMatch.group(1)
+        except AttributeError:  # no match
+            pass
+
+
+    def ConvertCite(self):
+        try:
+            self.OutputContent = "@{}".format(self.CiteText)
+        except AttributeError:  # no match
+            self.OutputContent = "@ERROR"
 
 
 class Figure(LatexObject):
@@ -144,8 +164,7 @@ class Figure(LatexObject):
         Regex = r"\\includegraphics.*?\{(.*?)\}"
         UrlRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
 
-        self.UrlMatch = UrlRegex.search(self.OriginalContent)
-        self.UrlText = self.UrlMatch.group(1)
+        self.UrlText = UrlRegex.findall(self.OriginalContent)
 
 
     def GetCaption(self):
@@ -174,10 +193,17 @@ class Figure(LatexObject):
         r""" Outputs the figures as expected by pandoc-crossref:
 
             ![<CAPTION>](<URL>){#<LABEL>}."""
-
-        self.OutputContent = "\n\n![{}]({}){{#{}}}\n\n".format(
+        
+        if len(self.UrlText) == 1:
+            self.OutputContent = "\n\n![{}]({}){{#{}}}\n\n".format(
                                                 self.CaptionText,
-                                                self.UrlText,
+                                                self.UrlText[0],
                                                 self.LabelText)
-
+        else:
+            self.OutputContent = "\n\n<div id='{}'>\n".format(self.LabelText)
+            for img in self.UrlText:
+                self.OutputContent = self.OutputContent + "![]({}){{}}\n".format(img)
+            
+            self.OutputContent = self.OutputContent + "\n\n{}".format(self.CaptionText)
+            self.OutputContent = self.OutputContent + "</div>\n\n"
 

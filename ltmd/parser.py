@@ -40,8 +40,8 @@ class PreProcess(object):
         self.RefExtract()
         self.ReplaceAll(self.ParsedRef)
 
-        self.CiteExtract()
-        self.ReplaceAll(self.ParsedCite)
+        #self.CiteExtract()
+        #self.ReplaceAll(self.ParsedCite)
 
         self.MathExtract()
         self.ReplaceAll(self.ParsedMath)
