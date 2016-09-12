@@ -27,7 +27,7 @@ class LatexObject(object):
         LabelRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
         
         self.LabelMatch = LabelRegex.search(self.OriginalContent)
-        self.LabelText = self.LabelMatch.group()
+        self.LabelText = self.LabelMatch.group(1)
 
 
 class Math(LatexObject):
@@ -53,8 +53,13 @@ class Math(LatexObject):
         Assumes that self.LabelMatch is already set."""
 
         LabelString = "\\label{{{}}}".format(self.LabelText)
+        
+        Regex = r"\\begin\{equation\}(.*?)\\end\{equation\}"
+        MathRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
 
-        self.Math = self.OriginalContent.replace(LabelString, "")
+        self.MathMatch = MathRegex.search(self.OriginalContent)
+
+        self.Math = self.MathMatch.group(1).replace(LabelString, "")
 
         return self.Math
 
@@ -67,10 +72,10 @@ class Math(LatexObject):
             $$ {#label}."""
         
         try:
-            self.OutputContent =  "$$\n\t {} \n$$ {{#{}}}".format(self.Math,
+            self.OutputContent =  "\n$$ {} $$ {{#{}}}\n".format(self.Math,
                                                               self.LabelText)
         except AttributeError:  # no Label
-            self.OutputContent = "$$\n\t {} \n$$".format(self.Math)
+            self.OutputContent = "\n$$ {} $$\n".format(self.Math)
 
 
 
@@ -95,7 +100,7 @@ class Ref(LatexObject):
         
         try:
             self.RefMatch = RefRegex.search(self.OriginalContent)
-            self.RefText = self.RefMatch.group()
+            self.RefText = self.RefMatch.group(1)
         except AttributeError:  # no match
             pass
 
@@ -133,7 +138,7 @@ class Figure(LatexObject):
         UrlRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
 
         self.UrlMatch = UrlRegex.search(self.OriginalContent)
-        self.UrlText = self.UrlMatch.group()
+        self.UrlText = self.UrlMatch.group(1)
 
 
     def GetCaption(self):
@@ -143,7 +148,7 @@ class Figure(LatexObject):
 
         Does this by using the regex:
 
-            \\caption\{(.*?\})(?=\\label|\n),
+            \\caption\{(.*?)\}(?=\\label|\n),
         
         i.e. it expects that you follow your caption with either a \label
         *or* a newline and that you don't do something like this...
@@ -151,11 +156,11 @@ class Figure(LatexObject):
             \caption{test \ref{test}
             I'm a fool.} """
 
-        Regex = r"\\caption\{(.*?\})(?=\\label|\n)"
+        Regex = r"\\caption\{(.*?)\}(?=\\label|\n)"
         CaptionRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
 
         self.CaptionMatch = CaptionRegex.search(self.OriginalContent)
-        self.CaptionText = self.CaptionMatch.group()
+        self.CaptionText = self.CaptionMatch.group(1)
 
 
     def ConvertFigure(self):
@@ -163,7 +168,7 @@ class Figure(LatexObject):
 
             ![<CAPTION>](<URL>){#<LABEL>}."""
 
-        self.OutputContent = "![{}]({}){{#{}}}".format(
+        self.OutputContent = "\n![{}]({}){{#{}}}\n".format(
                                                 self.CaptionText,
                                                 self.UrlText,
                                                 self.LabelText)

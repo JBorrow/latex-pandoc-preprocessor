@@ -32,7 +32,6 @@ def RunPandoc(content, extra=""):
     TempFileMD = tempfile.NamedTemporaryFile(mode='w+t', encoding='utf-8')
 
     TempFileTeX.write(content)
-    print(TempFileTeX.read())
 
     subprocess.call(['pandoc', '-f', 'latex', '-t', 'markdown', TempFileTeX.name, '-o', TempFileMD.name])
 
