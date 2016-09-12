@@ -168,7 +168,7 @@ class Figure(LatexObject):
 
             ![<CAPTION>](<URL>){#<LABEL>}."""
 
-        self.OutputContent = "\n![{}]({}){{#{}}}\n".format(
+        self.OutputContent = "\n\n![{}]({}){{#{}}}\n\n".format(
                                                 self.CaptionText,
                                                 self.UrlText,
                                                 self.LabelText)
