@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\begin{document}
+
+\section{This is a test}
+
+\begin{figure}
+	\includegraphics[width=0.4\textwidth]{test.png}
+	\caption{The LaTeX logo}
+	\label{fig:latex}
+\end{figure}
+
+The above figure (\ref{fig:latex}) shows the LaTeX logo.
+
+You can see an example of some reference math (equation \ref{eqn:test}) below.
+
+\begin{equation}\label{eqn:test}
+	\int \cos x \rm d x = \sin x + k
+\end{equation}
+
+This code even handles citations correctly. Here's an example, \cite{Lilley:2009zz}.
+
+\end{document}
