@@ -11,5 +11,5 @@ For more information, view the README or check out the github page:
 Author: Josh Borrow.
 """
 
-from parser import *
-from inputoutput import *
+from ltmd.parser import *
+from ltmd.inputoutput import *

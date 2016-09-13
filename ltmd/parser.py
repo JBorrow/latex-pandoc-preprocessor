@@ -25,7 +25,7 @@ import random
 import re
 import copy
 import string
-from parsetypes import *
+from ltmd.parsetypes import *
 
 
 class PreProcess(object):
