@@ -1,10 +1,9 @@
-import inputoutput as io
-from parser import * 
+import ltmd
 
-input = io.GetTex('Nuclear.tex')
+input = ltmd.GetTex('Nuclear.tex')
 
-PreProcessed = PreProcess(input)
-pandocced = io.RunPandoc(PreProcessed.ParsedText)
-PostProcessed = PostProcess(pandocced, PreProcessed.ParsedData)
+PreProcessed = ltmd.PreProcess(input)
+pandocced = ltmd.RunPandoc(PreProcessed.ParsedText)
+PostProcessed = ltmd.PostProcess(pandocced, PreProcessed.ParsedData)
 
-output = io.OutputMD('test.md', PostProcessed.ParsedText) 
+output = ltmd.OutputMD('test.md', PostProcessed.ParsedText) 
