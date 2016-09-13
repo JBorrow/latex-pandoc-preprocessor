@@ -72,10 +72,10 @@ class Math(LatexObject):
             $$ {#label}."""
         
         try:
-            self.OutputContent =  "\n$$ {} $$ {{#{}}}\n".format(self.Math,
+            self.OutputContent =  "\n$${}$$ {{#{}}}\n".format(self.Math,
                                                               self.LabelText)
         except AttributeError:  # no Label
-            self.OutputContent = "\n$$ {} $$\n".format(self.Math)
+            self.OutputContent = "\n$${}$$\n".format(self.Math)
 
 
 
