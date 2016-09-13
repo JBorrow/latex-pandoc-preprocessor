@@ -34,7 +34,6 @@ def RunPandoc(content, extra=""):
     TempFileMD = tempfile.NamedTemporaryFile(mode='w+t', encoding='utf-8')
 
     print("Writing temporary LaTeX file")
-    print(content)
     TempFileTeX.write(content)
 
     print("Running Pandoc")
