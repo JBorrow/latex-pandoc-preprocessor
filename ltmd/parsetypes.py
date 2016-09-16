@@ -9,6 +9,8 @@ Date Created: 2016-09-09.
 
 import re
 
+ShowErrors = False
+
 class LatexObject(object):
     def __init__(self, OriginalContent, UID):
         self.OriginalContent = OriginalContent
@@ -27,7 +29,13 @@ class LatexObject(object):
         LabelRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
         
         self.LabelMatch = LabelRegex.search(self.OriginalContent)
-        self.LabelText = self.LabelMatch.group(1)
+        try:
+            self.LabelText = self.LabelMatch.group(1)
+        except:
+            if ShowErrors:
+                self.LabelText = "@@@ERROR@@@"
+            else:
+                self.LabelText = ""
 
 
 class Math(LatexObject):
@@ -72,10 +80,10 @@ class Math(LatexObject):
             $$ {#label}."""
         
         try:
-            self.OutputContent =  "\n$$ {} $$ {{#{}}}\n".format(self.Math,
+            self.OutputContent =  "\n$${}$$ {{#{}}}\n".format(self.Math,
                                                               self.LabelText)
         except AttributeError:  # no Label
-            self.OutputContent = "\n$$ {} $$\n".format(self.Math)
+            self.OutputContent = "\n$${}$$\n".format(self.Math)
 
 
 
