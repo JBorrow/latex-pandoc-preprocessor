@@ -29,9 +29,10 @@ from ltmd.parsetypes import *
 
 
 class PreProcess(object):
-    def __init__(self, InputText):
+    def __init__(self, InputText, ImgPrepend=""):
         self.InputText = InputText
         self.ParsedText = copy.deepcopy(self.InputText)
+        self.ImgPrepend = ImgPrepend
         self.ParsedRef = {}
         self.ParsedCite = {}
         self.ParsedMath = {}
@@ -117,7 +118,7 @@ class PreProcess(object):
 
         for FigureText in FigExtracted:
             ThisUID = self.GenerateUID()
-            self.ParsedFig[ThisUID] = Figure(FigureText, ThisUID)
+            self.ParsedFig[ThisUID] = Figure(FigureText, ThisUID, self.ImgPrepend)
 
 
     def ReplaceAll(self, toParse):

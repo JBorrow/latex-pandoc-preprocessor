@@ -144,8 +144,9 @@ class Cite(LatexObject):
 
 
 class Figure(LatexObject):
-    def __init__(self, OriginalContent, UID):
+    def __init__(self, OriginalContent, UID, ImgPrepend=""):
         self.OriginalContent = OriginalContent
+        self.ImgPrepend=""
         self.UID = UID
         self.GetUrls()
         self.GetLabel()
@@ -197,13 +198,13 @@ class Figure(LatexObject):
         if len(self.UrlText) == 1:
             self.OutputContent = "\n\n![{}]({}){{#{}}}\n\n".format(
                                                 self.CaptionText,
-                                                self.UrlText[0],
+                                                self.ImgPrepend + self.UrlText[0],
                                                 self.LabelText)
         else:
             self.OutputContent = "\n\n<div id=\"{}\">\n\n".format(self.LabelText)
             for index, img in enumerate(self.UrlText):
                 cap = '#{}{}'.format(self.LabelText, index)
-                self.OutputContent = self.OutputContent + "![]({}){{{}}}\n".format(img, cap)
+                self.OutputContent = self.OutputContent + "![]({}){{{}}}\n".format(self.ImgPrepend +img, cap)
             
             self.OutputContent = self.OutputContent + "\n{}".format(self.CaptionText)
             self.OutputContent = self.OutputContent + "\n\n</div>\n\n"
