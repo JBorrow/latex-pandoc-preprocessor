@@ -154,7 +154,7 @@ class Cite(LatexObject):
 class Figure(LatexObject):
     def __init__(self, OriginalContent, UID, ImgPrepend=""):
         self.OriginalContent = OriginalContent
-        self.ImgPrepend=""
+        self.ImgPrepend=ImgPrepend
         self.UID = UID
         self.GetUrls()
         self.GetLabel()
