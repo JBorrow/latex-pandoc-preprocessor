@@ -37,6 +37,7 @@ class PreProcess(object):
         self.ParsedCite = {}
         self.ParsedMath = {}
         self.ParsedFig = {}
+        self.ParsedWrapFig = {}
         
         self.RefExtract()
         self.ReplaceAll(self.ParsedRef)
@@ -47,16 +48,18 @@ class PreProcess(object):
         self.MathExtract()
         self.ReplaceAll(self.ParsedMath)
 
-        self.FigExtract()
         self.WrapFigExtract()
-        self.ReplaceAll(self.ParsedFig)
+        self.ReplaceAll(self.ParsedWrapFig)
 
+        self.FigExtract()
+        self.ReplaceAll(self.ParsedFig)
 
         self.ParsedData = {
                 'ref': self.ParsedRef,
                 'cite': self.ParsedCite,
                 'math': self.ParsedMath,
                 'fig': self.ParsedFig,
+                'wfig': self.ParsedWrapFig,
         }
 
 
@@ -127,13 +130,13 @@ class PreProcess(object):
         r""" Same as above but looks for wrapfigures """
 
         Regex = r"\\begin\{wrapfigure\}.*?\\end\{wrapfigure\}"
-        self.FigRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
+        self.WrapFigRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
-        FigExtracted = self.FigRegex.findall(self.ParsedText)
+        FigExtracted = self.WrapFigRegex.findall(self.ParsedText)
 
         for FigureText in FigExtracted:
             ThisUID = self.GenerateUID()
-            self.ParsedFig[ThisUID] = Figure(FigureText, ThisUID, self.ImgPrepend)
+            self.ParsedWrapFig[ThisUID] = Figure(FigureText, ThisUID, self.ImgPrepend)
 
 
     def ReplaceAll(self, toParse):
@@ -144,12 +147,12 @@ class PreProcess(object):
             self.ParsedText = self.ParsedText.replace(Instance.OriginalContent, UID)
 
 
-
 class PostProcess(object):
     def __init__(self, InputText, ParsedData):
         self.InputText = InputText
         self.ParsedText = copy.deepcopy(self.InputText)
 
+        self.ReplaceAll(ParsedData['wfig'])
         self.ReplaceAll(ParsedData['fig'])
         self.ReplaceAll(ParsedData['math'])
         self.ReplaceAll(ParsedData['cite'])

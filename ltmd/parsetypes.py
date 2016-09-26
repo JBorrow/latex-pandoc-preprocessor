@@ -195,7 +195,11 @@ class Figure(LatexObject):
         CaptionRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
 
         self.CaptionMatch = CaptionRegex.search(self.OriginalContent)
-        self.CaptionText = self.CaptionMatch.group(1)
+        try:
+            self.CaptionText = self.CaptionMatch.group(1)
+        except AttributeError:
+            self.CaptionText = ""
+
 
 
     def ConvertFigure(self):
