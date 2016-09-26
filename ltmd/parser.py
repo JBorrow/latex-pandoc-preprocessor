@@ -48,7 +48,9 @@ class PreProcess(object):
         self.ReplaceAll(self.ParsedMath)
 
         self.FigExtract()
+        self.WrapFigExtract()
         self.ReplaceAll(self.ParsedFig)
+
 
         self.ParsedData = {
                 'ref': self.ParsedRef,
@@ -112,6 +114,19 @@ class PreProcess(object):
         the text in a Fig instance. """
 
         Regex = r"\\begin\{figure\}.*?\\end\{figure\}"
+        self.FigRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
+
+        FigExtracted = self.FigRegex.findall(self.ParsedText)
+
+        for FigureText in FigExtracted:
+            ThisUID = self.GenerateUID()
+            self.ParsedFig[ThisUID] = Figure(FigureText, ThisUID, self.ImgPrepend)
+
+
+    def WrapFigExtract(self):
+        r""" Same as above but looks for wrapfigures """
+
+        Regex = r"\\begin\{wrapfigure\}.*?\\end\{wrapfigure\}"
         self.FigRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
         FigExtracted = self.FigRegex.findall(self.ParsedText)

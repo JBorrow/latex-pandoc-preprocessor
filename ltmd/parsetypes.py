@@ -210,9 +210,10 @@ class Figure(LatexObject):
                                                 self.LabelText)
         else:
             self.OutputContent = "\n\n<div id=\"{}\">\n\n".format(self.LabelText)
+            width = 100/len(self.UrlText)
             for index, img in enumerate(self.UrlText):
                 cap = '#{}{}'.format(self.LabelText, index)
-                self.OutputContent = self.OutputContent + "![]({}){{{}}}\n".format(self.ImgPrepend +img, cap)
+                self.OutputContent = self.OutputContent + "![]({}){{{} width={}%}}\n".format(self.ImgPrepend +img, cap, width)
             
             self.OutputContent = self.OutputContent + "\n{}".format(self.CaptionText)
             self.OutputContent = self.OutputContent + "\n\n</div>\n\n"
