@@ -26,7 +26,7 @@ def OutputMD(filename, content):
         file.write(content)
 
 
-def RunPandoc(content, extra=""):
+def RunPandoc(content, extra=[]):
     """ Creates a temporary file, runs pandoc TeX->MD on it (with content)
     and then reopens and returns the string. """
 
@@ -38,7 +38,7 @@ def RunPandoc(content, extra=""):
     TeXContents = TempFileTeX.read()
 
     print("Running Pandoc")
-    subprocess.call(['pandoc', '-f', 'latex', '-t', 'markdown', TempFileTeX.name, '-o', TempFileMD.name])
+    subprocess.call(['pandoc', '-f', 'latex', '-t', 'markdown', TempFileTeX.name, '-o', TempFileMD.name] + extra)
 
     print("Reading temporary output file")
     OutputData = TempFileMD.read()
