@@ -166,10 +166,12 @@ class PreProcess(object):
     def TableExtract(self):
         r""" Looks for tables and processes them using regex """
 
-        Regex = r"\\begin\{table.*?\\end\{table\}"  # no closing brace on purpose -- this is so that table* is included
+        Regex = r"\\begin\{table\}.*?\\end\{table\}"  # no closing brace on purpose -- this is so that table* is included
         self.TableRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
+        Regex = r"\\begin\{table\*\}.*?\\end\{table\*}"
+        self.TableStarRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
-        TableExtracted = self.TableRegex.findall(self.ParsedText)
+        TableExtracted = self.TableRegex.findall(self.ParsedText) + self.TableStarRegex.findall(self.ParsedText)
 
         for TableText in TableExtracted:
             ThisUID = self.GenerateUID()

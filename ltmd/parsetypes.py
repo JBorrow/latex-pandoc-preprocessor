@@ -269,7 +269,12 @@ class Table(LatexObject):
             # for pypandoc version before 1.2
             ConvertedTable = pypandoc.convert(self.TableText, to='markdown', format='latex', extra_args = PandocArgs) 
 
-        ConvertedCaption = ": {} {{#{}}}".format(self.CaptionText, self.LabelText)
+        if self.LabelText:
+            ThisLabel = self.LabelText
+        else:
+            ThisLabel = "tbl:" + self.UID
 
-        self.OutputContent = "\n{}\n{}\n".format(ConvertedTable, ConvertedCaption)
+        ConvertedCaption = ": {} {{#{}}}".format(self.CaptionText.replace("\n", " "), ThisLabel)
+
+        self.OutputContent = "\n\n{}\n{}\n".format(ConvertedTable, ConvertedCaption)
 
