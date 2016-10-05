@@ -257,13 +257,13 @@ class Table(LatexObject):
         r""" This uses pandoc to convert the explicit table text only. """
 
         PandocArgs = ["--mathjax"]
-        try:
-            
-            ConvertedTable = pypandoc.convert_text(self.TableText, to='markdown', format='latex', extra_args = PandocArgs)
 
+        try:
+            ConvertedTable = pypandoc.convert_text(self.TableText, to='markdown', format='latex', extra_args = PandocArgs)
         except AttributeError:
             # for pypandoc version before 1.2
             ConvertedTable = pypandoc.convert(self.TableText, to='markdown', format='latex', extra_args = PandocArgs) 
+
         ConvertedCaption = ": {} {{#{}}}".format(self.CaptionText, self.LabelText)
 
         self.OutputContent = "\n{}\n{}\n".format(ConvertedTable, ConvertedCaption)
