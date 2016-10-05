@@ -8,6 +8,7 @@ Date Created: 2016-09-09.
 """
 
 import re
+import pypandoc
 
 ShowErrors = False
 
@@ -36,6 +37,33 @@ class LatexObject(object):
                 self.LabelText = "@@@ERROR@@@"
             else:
                 self.LabelText = ""
+                
+    
+    def GetCaption(self):
+        r""" Finds the caption inside the OriginalContent. Looks for
+        
+            \caption{<TEXT>}.
+
+        Does this by using the regex:
+
+            \\caption\{(.*?)\}(?=\\label|\n),
+        
+        i.e. it expects that you follow your caption with either a \label
+        *or* a newline and that you don't do something like this...
+
+            \caption{test \ref{test}
+            I'm a fool.} """
+
+        Regex = r"\\caption\{(.*?)\}(?=\\label|\n)"
+        CaptionRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
+
+        self.CaptionMatch = CaptionRegex.search(self.OriginalContent)
+        try:
+            self.CaptionText = self.CaptionMatch.group(1)
+        except AttributeError:
+            self.CaptionText = ""
+
+
 
 
 class Math(LatexObject):
@@ -154,12 +182,13 @@ class Cite(LatexObject):
 class Figure(LatexObject):
     def __init__(self, OriginalContent, UID, ImgPrepend=""):
         self.OriginalContent = OriginalContent
-        self.ImgPrepend=ImgPrepend
+        self.ImgPrepend = ImgPrepend
         self.UID = UID
         self.GetUrls()
         self.GetLabel()
         self.GetCaption()
         self.ConvertFigure()
+
 
     def GetUrls(self):
         r""" Finds the URLs of the graphics files, found in:
@@ -174,32 +203,6 @@ class Figure(LatexObject):
         UrlRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
 
         self.UrlText = UrlRegex.findall(self.OriginalContent)
-
-
-    def GetCaption(self):
-        r""" Finds the caption inside the OriginalContent. Looks for
-        
-            \caption{<TEXT>}.
-
-        Does this by using the regex:
-
-            \\caption\{(.*?)\}(?=\\label|\n),
-        
-        i.e. it expects that you follow your caption with either a \label
-        *or* a newline and that you don't do something like this...
-
-            \caption{test \ref{test}
-            I'm a fool.} """
-
-        Regex = r"\\caption\{(.*?)\}(?=\\label|\n)"
-        CaptionRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
-
-        self.CaptionMatch = CaptionRegex.search(self.OriginalContent)
-        try:
-            self.CaptionText = self.CaptionMatch.group(1)
-        except AttributeError:
-            self.CaptionText = ""
-
 
 
     def ConvertFigure(self):
@@ -221,4 +224,43 @@ class Figure(LatexObject):
             
             self.OutputContent = self.OutputContent + "\n{}".format(self.CaptionText)
             self.OutputContent = self.OutputContent + "\n\n</div>\n\n"
+
+
+class Table(LatexObject):
+    def __init__(self, OriginalContent, UID):
+        self.OriginalContent = OriginalContent
+        self.UID = UID
+        self.GetLabel()
+        self.GetCaption()
+        self.GetTable()
+        self.ConvertFigure()
+
+
+    def GetTable(self):
+        r""" The good thing here is that we wrap the actual table content
+        inside \begin{tabular}, and all of the caption and label inside
+        \begin{table}.
+        """
+
+        Regex = r"\\begin{tabular}.*?\\end{tabular}"
+        TableRegex = re.compile(Regex, re.DOTALL|re.VERBOSE)
+
+        self.TableMatch = TableRegex.search(self.OriginalContent)
+
+        try:
+            self.TableText = self.TableMatch.group(0)
+        except AttributeError:
+            self.TableText = ""
+
+
+    def ConvertFigure(self):
+        r""" This uses pandoc to convert the explicit table text only. """
+
+        PandocArgs = ["--mathjax"]
+         
+        ConvertedTable = pypandoc.convert_text(self.TableText, to='markdown', format='latex', extra_args = PandocArgs)
+
+        ConvertedCaption = ": {} {{#{}}}".format(self.CaptionText, self.LabelText)
+
+        self.OutputContent = "\n{}\n{}\n".format(ConvertedTable, ConvertedCaption)
 

@@ -22,4 +22,18 @@ You can see an example of some reference math (equation \ref{eq:test}) below.
 
 This code even handles citations correctly. Here's an example, \cite{Lilley:2009zz}.
 
+Now, let's look at Tables:
+
+\begin{table}
+	\centering
+	\begin{tabular}{c|c|c}
+		a & b & c \\
+		d & e & f \\
+		g & h & i \\
+	\end{tabular}
+	\caption{What have we here? A table!}\label{tbl:test}
+\end{table}
+
+This table is referenced here: \ref{tbl:test}.
+
 \end{document}

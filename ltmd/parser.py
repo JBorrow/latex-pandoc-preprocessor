@@ -38,6 +38,7 @@ class PreProcess(object):
         self.ParsedMath = {}
         self.ParsedFig = {}
         self.ParsedWrapFig = {}
+        self.ParsedTables = {}
         
         self.RefExtract()
         self.ReplaceAll(self.ParsedRef)
@@ -54,12 +55,16 @@ class PreProcess(object):
         self.FigExtract()
         self.ReplaceAll(self.ParsedFig)
 
+        self.TableExtract()
+        self.ReplaceAll(self.ParsedTables)
+
         self.ParsedData = {
                 'ref': self.ParsedRef,
                 'cite': self.ParsedCite,
                 'math': self.ParsedMath,
                 'fig': self.ParsedFig,
                 'wfig': self.ParsedWrapFig,
+                'tab': self.ParsedTables,
         }
 
 
@@ -139,6 +144,19 @@ class PreProcess(object):
             self.ParsedWrapFig[ThisUID] = Figure(FigureText, ThisUID, self.ImgPrepend)
 
 
+    def TableExtract(self):
+        r""" Looks for tables and processes them using regex """
+
+        Regex = r"\\begin\{table\}.*?\\end\{table\}"
+        self.TableRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
+
+        TableExtracted = self.TableRegex.findall(self.ParsedText)
+
+        for TableText in TableExtracted:
+            ThisUID = self.GenerateUID()
+            self.ParsedTables[ThisUID] = Table(TableText, ThisUID)
+
+
     def ReplaceAll(self, toParse):
         """ Replaces all of the OriginalContent from the objects in ParsedData
         with their respective Unique Identifiers. """
@@ -157,6 +175,7 @@ class PostProcess(object):
         self.ReplaceAll(ParsedData['math'])
         self.ReplaceAll(ParsedData['cite'])
         self.ReplaceAll(ParsedData['ref'])
+        self.ReplaceAll(ParsedData['tab'])
     
     def ReplaceAll(self, toParse):
         """ Replaces all of the Unique Identifiers from ParsedData with their
