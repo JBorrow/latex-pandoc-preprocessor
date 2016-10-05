@@ -194,6 +194,7 @@ class PostProcess(object):
         self.ReplaceAll(ParsedData['math'])
         self.ReplaceAll(ParsedData['cite'])
         self.ReplaceAll(ParsedData['ref'])
+        self.ReplaceAll(ParsedData['ifig'])
         self.ReplaceAll(ParsedData['tab'])
     
     def ReplaceAll(self, toParse):
