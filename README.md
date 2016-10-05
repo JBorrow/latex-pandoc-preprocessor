@@ -25,3 +25,4 @@ Requirements
 
 + ```python3``` (no ```python2``` version will *ever* be made available)
 + ```pandoc``` somewhere in your path.
++ ```pypandoc```
