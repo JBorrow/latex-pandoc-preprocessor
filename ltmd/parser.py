@@ -153,14 +153,15 @@ class PreProcess(object):
         r""" Looks for inline figures that aren't wrapped inside any kind of
              Figure environment. """
 
-        Regex = r"\\includegraphics.*?"
+        Regex = r"(\\includegraphics.*\{.*?\})"
         self.InlineFigRegex = re.compile(Regex, re.VERBOSE)
 
         FigExtracted = self.InlineFigRegex.findall(self.ParsedText)
 
         for FigureText in FigExtracted:
+            print(FigureText)
             ThisUID = self.GenerateUID()
-            self.ParsedWrapFig[ThisUID] = Figure(FigureText, ThisUID, self.ImgPrepend)
+            self.ParsedInlineFig[ThisUID] = Figure(FigureText, ThisUID, self.ImgPrepend)
 
 
     def TableExtract(self):

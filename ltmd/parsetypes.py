@@ -214,12 +214,12 @@ class Figure(LatexObject):
             ThisLabel= "{{#{}}}".format(self.LabelText)
         else:
             ThisLabel = ""
-
+        
         if len(self.UrlText) == 1:
             self.OutputContent = "\n\n![{}]({}){}\n\n".format(
                                                 self.CaptionText,
                                                 self.ImgPrepend + self.UrlText[0],
-                                                self.ThisLabel)
+                                                ThisLabel)
         else:
             self.OutputContent = "\n\n<div id=\"{}\">\n\n".format(self.LabelText)
             width = 100/len(self.UrlText)
