@@ -37,6 +37,7 @@ class PreProcess(object):
         self.ParsedCite = {}
         self.ParsedMath = {}
         self.ParsedFig = {}
+        self.ParsedInlineFig = {}  # e.g. just \includegraphics{}
         self.ParsedWrapFig = {}
         self.ParsedTables = {}
         
@@ -55,6 +56,9 @@ class PreProcess(object):
         self.FigExtract()
         self.ReplaceAll(self.ParsedFig)
 
+        self.InlineExtract()
+        self.ReplaceAll(self.ParsedInlineFig)
+
         self.TableExtract()
         self.ReplaceAll(self.ParsedTables)
 
@@ -64,6 +68,7 @@ class PreProcess(object):
                 'math': self.ParsedMath,
                 'fig': self.ParsedFig,
                 'wfig': self.ParsedWrapFig,
+                'ifig': self.ParsedInlineFig,
                 'tab': self.ParsedTables,
         }
 
@@ -138,6 +143,20 @@ class PreProcess(object):
         self.WrapFigRegex = re.compile(Regex, re.VERBOSE|re.DOTALL)
 
         FigExtracted = self.WrapFigRegex.findall(self.ParsedText)
+
+        for FigureText in FigExtracted:
+            ThisUID = self.GenerateUID()
+            self.ParsedWrapFig[ThisUID] = Figure(FigureText, ThisUID, self.ImgPrepend)
+
+
+    def InlineExtract(self):
+        r""" Looks for inline figures that aren't wrapped inside any kind of
+             Figure environment. """
+
+        Regex = r"\\includegraphics.*?"
+        self.InlineFigRegex = re.compile(Regex, re.VERBOSE)
+
+        FigExtracted = self.InlineFigRegex.findall(self.ParsedText)
 
         for FigureText in FigExtracted:
             ThisUID = self.GenerateUID()

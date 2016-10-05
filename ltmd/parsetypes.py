@@ -210,11 +210,16 @@ class Figure(LatexObject):
 
             ![<CAPTION>](<URL>){#<LABEL>}."""
         
+        if self.LabelText:  # Deal with uncaptioned ones
+            ThisLabel= "{{#{}}}".format(self.LabelText)
+        else:
+            ThisLabel = ""
+
         if len(self.UrlText) == 1:
-            self.OutputContent = "\n\n![{}]({}){{#{}}}\n\n".format(
+            self.OutputContent = "\n\n![{}]({}){}\n\n".format(
                                                 self.CaptionText,
                                                 self.ImgPrepend + self.UrlText[0],
-                                                self.LabelText)
+                                                self.ThisLabel)
         else:
             self.OutputContent = "\n\n<div id=\"{}\">\n\n".format(self.LabelText)
             width = 100/len(self.UrlText)
