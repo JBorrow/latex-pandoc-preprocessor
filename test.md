@@ -24,6 +24,7 @@ This code even handles citations correctly. Here’s an example,
 Now, let’s look at Tables:
 
 
+
   --- --- ---
    a   b   c
    d   e   f

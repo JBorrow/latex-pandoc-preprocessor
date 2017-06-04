@@ -24,7 +24,6 @@ Date Created: 2016-09-09.
 import random
 import re
 import copy
-import string
 from ltmd.parsetypes import *
 
 
@@ -63,13 +62,13 @@ class PreProcess(object):
         self.ReplaceAll(self.ParsedTables)
 
         self.ParsedData = {
-                'ref': self.ParsedRef,
-                'cite': self.ParsedCite,
-                'math': self.ParsedMath,
-                'fig': self.ParsedFig,
-                'wfig': self.ParsedWrapFig,
-                'ifig': self.ParsedInlineFig,
-                'tab': self.ParsedTables,
+            'ref': self.ParsedRef,
+            'cite': self.ParsedCite,
+            'math': self.ParsedMath,
+            'fig': self.ParsedFig,
+            'wfig': self.ParsedWrapFig,
+            'ifig': self.ParsedInlineFig,
+            'tab': self.ParsedTables,
         }
 
 

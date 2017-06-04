@@ -5,9 +5,6 @@ Author: Josh Borrow
 Date Created: 2016-09-09
 """
 
-import os
-import tempfile
-import subprocess
 import pypandoc
 
 
