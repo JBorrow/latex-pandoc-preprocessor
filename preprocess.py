@@ -35,4 +35,4 @@ PreProcessed = ltmd.PreProcess(InputText)
 Pandocced = ltmd.RunPandoc(PreProcessed.ParsedText)
 PostProcessed = ltmd.PostProcess(Pandocced, PreProcessed.ParsedData)
 
-Output = ltmd.OutputMD(OutputFilename, PostProcessed.ParsedText)
+ltmd.OutputMD(OutputFilename, PostProcessed.ParsedText)
