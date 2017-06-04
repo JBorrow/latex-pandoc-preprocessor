@@ -108,10 +108,10 @@ class Math(LatexObject):
             $$ {#label}."""
         
         try:
-            self.OutputContent =  "\n$${}$$ {{#{}}}\n".format(self.Math,
+            self.OutputContent =  "$${}$$ {{#{}}}".format(self.Math,
                                                               self.LabelText)
         except AttributeError:  # no Label
-            self.OutputContent = "\n$${}$$\n".format(self.Math)
+            self.OutputContent = "$${}$$".format(self.Math)
 
 
 
@@ -216,19 +216,19 @@ class Figure(LatexObject):
             ThisLabel = ""
         
         if len(self.UrlText) == 1:
-            self.OutputContent = "\n\n![{}]({}){}\n\n".format(
+            self.OutputContent = "![{}]({}){}".format(
                                                 self.CaptionText,
                                                 self.ImgPrepend + self.UrlText[0],
                                                 ThisLabel)
         else:
-            self.OutputContent = "\n\n<div id=\"{}\">\n\n".format(self.LabelText)
+            self.OutputContent = "<div id=\"{}\">".format(self.LabelText)
             width = 100/len(self.UrlText)
             for index, img in enumerate(self.UrlText):
                 cap = '#{}{}'.format(self.LabelText, index)
                 self.OutputContent = self.OutputContent + "![]({}){{{} width={}%}}\n".format(self.ImgPrepend +img, cap, width)
             
             self.OutputContent = self.OutputContent + "\n{}".format(self.CaptionText)
-            self.OutputContent = self.OutputContent + "\n\n</div>\n\n"
+            self.OutputContent = self.OutputContent + "\n</div>\n"
 
 
 class Table(LatexObject):
@@ -276,5 +276,5 @@ class Table(LatexObject):
 
         ConvertedCaption = ": {} {{#{}}}".format(self.CaptionText.replace("\n", " "), ThisLabel)
 
-        self.OutputContent = "\n\n{}\n{}\n".format(ConvertedTable, ConvertedCaption)
+        self.OutputContent = "{}{}".format(ConvertedTable, ConvertedCaption)
 
