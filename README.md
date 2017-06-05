@@ -30,7 +30,6 @@ One should use:
 
 The final output string can then be extracted by using ```post_processed.parsed_text```.
 
-
 Requirements
 ------------
 
