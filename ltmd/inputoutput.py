@@ -8,7 +8,7 @@ Date Created: 2016-09-09
 import pypandoc
 
 
-def GetTex(filename):
+def get_tex(filename):
     """ Get the content of the tex file """
     
     print("Reading {}...".format(filename))
@@ -16,7 +16,7 @@ def GetTex(filename):
        return file.read()
 
 
-def OutputMD(filename, content):
+def output_md(filename, content):
     """ Output the final markdown to file """
 
     print("Writing {}...".format(filename))
@@ -24,7 +24,7 @@ def OutputMD(filename, content):
         file.write(content)
 
 
-def RunPandoc(content, extra=[]):
+def run_pandoc(content, extra=[]):
     """ Creates a temporary file, runs pandoc TeX->MD on it (with content)
     and then reopens and returns the string. """
     print("Running Pandoc (LT -> MD)")
