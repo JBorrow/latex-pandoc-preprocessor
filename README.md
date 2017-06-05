@@ -24,9 +24,11 @@ The module can also be used through an API, through the two objects that are giv
 
 One should use:
 
-    pre_processed = ltmd.PreProcess(input_text)
-    pandocced = ltmd.run_pandoc(pre_processed.parsed_text)
-    post_processed = ltmd.PostProcess(pandocced, pre_processed.parsed_data)
+```python
+pre_processed = ltmd.PreProcess(input_text)
+pandocced = ltmd.run_pandoc(pre_processed.parsed_text)
+post_processed = ltmd.PostProcess(pandocced, pre_processed.parsed_data)
+```
 
 The final output string can then be extracted by using ```post_processed.parsed_text```.
 
