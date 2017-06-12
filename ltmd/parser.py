@@ -21,7 +21,7 @@ Author: Josh Borrow
 Date Created: 2016-09-09.
 """
 
-import random
+import uuid
 import re
 import copy
 from ltmd.parsetypes import *
@@ -76,9 +76,7 @@ class PreProcess(object):
         r""" Generates a Unique Identifier - checks if it is already in
         self.parsed_data.keys() - if not it gets returned for use elsewhere."""
 
-        uid = random.randint(0, 1e10)
-
-        return "{:0>10}".format(uid)
+        return "{}".format(uuid.uuid4())
 
 
     def ref_extract(self):
