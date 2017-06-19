@@ -6,6 +6,7 @@ Date Created: 2016-09-09
 """
 
 import pypandoc
+import ltmd
 
 
 def get_tex(filename):
@@ -32,3 +33,15 @@ def run_pandoc(content, extra=[]):
 
     return output
 
+
+def parse_file(input_filename, output_filename):
+    """ Parse a single file from LaTeX to markdown with the ltmd module. """
+    input_text = get_tex(input_filename)
+
+    pre_processed = ltmd.PreProcess(input_text)
+    pandocced = ltmd.run_pandoc(pre_processed.parsed_text)
+    post_processed = ltmd.PostProcess(pandocced, pre_processed.parsed_data)
+
+    output_md(output_filename, post_processed.parsed_text)
+
+    return

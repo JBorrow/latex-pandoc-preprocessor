@@ -32,6 +32,12 @@ post_processed = ltmd.PostProcess(pandocced, pre_processed.parsed_data)
 
 The final output string can then be extracted by using ```post_processed.parsed_text```.
 
+It is also possible to use a wrapper function in ```ltmd``` from markdown,
+
+```
+ltmd.inputoutput.parse_file(input_filename, output_filename)
+```
+
 Requirements
 ------------
 
