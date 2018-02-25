@@ -18,7 +18,8 @@ if __name__ == "__main__":
     PARSER = argparse.ArgumentParser()
 
     PARSER.add_argument("input", type=str, help='Filename of the input .tex file.')
-    PARSER.add_argument('output', type=str, help='Output markdown filename.')
+    PARSER.add_argument("output", type=str, help='Output markdown filename.')
+    PARSER.add_argument("debug", type=str, help="Run in debug mode (yes/no).")
 
     ARGS = PARSER.parse_args()
 
@@ -26,12 +27,14 @@ if __name__ == "__main__":
     input_filename = ARGS.input
     output_filename = ARGS.output
 
+    debug = ARGS.debug == "yes"
+
 
     # now need to run ltmd options
 
     input_text = ltmd.get_tex(input_filename)
 
-    pre_processed = ltmd.PreProcess(input_text)
+    pre_processed = ltmd.PreProcess(input_text, debug=debug)
     pandocced = ltmd.run_pandoc(pre_processed.parsed_text)
     post_processed = ltmd.PostProcess(pandocced, pre_processed.parsed_data)
 

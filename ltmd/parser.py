@@ -28,10 +28,12 @@ from ltmd.parsetypes import *
 
 
 class PreProcess(object):
-    def __init__(self, input_text, img_prepend=""):
+    def __init__(self, input_text, img_prepend="", debug=False):
         self.input_text = input_text
         self.parsed_text = copy.deepcopy(self.input_text)
         self.img_prepend = img_prepend
+        self.debug = debug
+
         self.parsed_ref = {}
         self.parsed_cite = {}
         self.parsed_math = {}
@@ -182,6 +184,12 @@ class PreProcess(object):
         with their respective Unique Identifiers. """
 
         for uid, instance in to_parse.items():
+            if self.debug:
+                print("[Debug  ] Found {} item {}".format(
+                    instance.__class__.__name__,
+                    instance.original_content,
+                ))
+
             self.parsed_text = self.parsed_text.replace(instance.original_content, uid)
 
 
